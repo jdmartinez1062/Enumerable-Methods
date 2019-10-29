@@ -14,5 +14,12 @@ module Enumerable
           i += 1
         end
     end
+    def my_select
+        array = []
+        my_each_with_index do |x, i|
+          array.push(self[i]) if yield(x)
+        end
+        array
+    end
 
 end
