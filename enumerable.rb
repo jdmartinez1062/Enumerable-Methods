@@ -29,6 +29,7 @@ module Enumerable
     end
     array
   end
+  
   def my_all?(condition = UNDEFINED)
     check = true
 
@@ -67,7 +68,7 @@ module Enumerable
     check
   end
 
-  def my_none?
+  def my_none?(condition = UNDEFINED)
     check = true
 
     if block_given?
@@ -85,4 +86,20 @@ module Enumerable
     end
     check
   end
+
+  def my_count(condition = UNDEFINED)
+    counter = 0
+    my_each do |x|
+      condition = yield(x) if block_given?
+      if condition && block_given?
+        counter += 1
+      elsif condition == x
+        counter += 1
+      elsif condition == UNDEFINED
+        counter += 1
+      end
+    end
+    counter
+  end
+
 end
