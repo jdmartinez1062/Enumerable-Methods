@@ -19,8 +19,13 @@ module Enumerable
 
   def my_select
     array = []
-    my_each_with_index do |x, i|
-      array.push(self[i]) if yield(x)
+    if block_given?
+      my_each_with_index do |x, i|
+        array.push(self[i]) if yield(x)
+      end
+    else
+      new_e = Enumerator.new(array, :my_select)
+      return new_e
     end
     array
   end
