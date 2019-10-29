@@ -101,5 +101,14 @@ module Enumerable
     end
     counter
   end
-
+  def my_map
+    if block_given?
+      my_each_with_index do |x, i|
+        self[i] = yield(x)
+      end
+    else
+      return Enumerable.new(self,:my_map)
+    end
+    self
+  end
 end
