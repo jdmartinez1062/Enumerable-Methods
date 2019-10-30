@@ -118,6 +118,7 @@ module Enumerable
     sum = initial
     sum = 0 if initial == UNDEFINED
     case option
+
     when UNDEFINED
       if block_given?
         my_each do |x|
@@ -138,4 +139,8 @@ module Enumerable
       end
     end
   end
+end
+
+def multiply_els(array)
+  array.my_inject(1, :*)
 end
