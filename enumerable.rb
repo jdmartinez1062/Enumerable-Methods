@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Enumerable
+  UNDEFINED = Object.new
   def my_each
     i = 0
     while i < length
@@ -29,7 +30,7 @@ module Enumerable
     end
     array
   end
-  
+
   def my_all?(condition = UNDEFINED)
     check = true
 
@@ -101,14 +102,40 @@ module Enumerable
     end
     counter
   end
+
   def my_map
     if block_given?
       my_each_with_index do |x, i|
         self[i] = yield(x)
       end
+      self
     else
-      return Enumerable.new(self,:my_map)
+      Enumerable.new(self, :my_map)
     end
-    self
+  end
+
+  def my_inject(initial = UNDEFINED, option = UNDEFINED)
+    sum = initial
+    sum = 0 if initial == UNDEFINED
+    case option
+    when UNDEFINED
+      if block_given?
+        my_each do |x|
+          sum = yield(sum, x)
+        end
+        sum
+      elsif initial.is_a?(Symbol)
+        my_inject do |memo, obj|
+          memo.method(initial).call(obj)
+        end
+      end
+    else
+      if option.is_a?(Symbol)
+        sum = initial
+        my_inject(sum) do |memo, obj|
+          memo.method(option).call(obj)
+        end
+      end
+    end
   end
 end
