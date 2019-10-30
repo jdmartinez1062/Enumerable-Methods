@@ -4,17 +4,25 @@ module Enumerable
   UNDEFINED = Object.new
   def my_each
     i = 0
-    while i < length
-      yield(self[i])
-      i += 1
+    if block_given?
+      while i < length
+        yield(self[i])
+        i += 1
+      end
+    else
+      Enumerator.new(self, :my_each)
     end
   end
 
   def my_each_with_index
     i = 0
-    while i < length
-      yield(self[i], i)
-      i += 1
+    if block_given?
+      while i < length
+        yield(self[i], i)
+        i += 1
+      end
+    else
+      Enumerator.new(self, :my_each_with_index)
     end
   end
 
@@ -25,7 +33,7 @@ module Enumerable
         array.push(self[i]) if yield(x)
       end
     else
-      new_e = Enumerator.new(array, :my_select)
+      new_e = Enumerator.new(self, :my_select)
       return new_e
     end
     array
