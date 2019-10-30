@@ -103,8 +103,13 @@ module Enumerable
     counter
   end
 
-  def my_map
-    if block_given?
+  def my_map(block = nil)
+    if block.is_a? Proc
+      my_each_with_index do |x, i|
+        self[i] = block.call(x)
+      end
+      self
+    elsif block_given?
       my_each_with_index do |x, i|
         self[i] = yield(x)
       end
