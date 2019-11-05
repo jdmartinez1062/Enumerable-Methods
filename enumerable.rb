@@ -12,6 +12,7 @@ module Enumerable
     else
       Enumerator.new(self, :my_each)
     end
+    self
   end
 
   def my_each_with_index
