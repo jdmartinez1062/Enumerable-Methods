@@ -4,13 +4,22 @@ module Enumerable
   UNDEFINED = Object.new
   def my_each
     i = 0
+    test = is_a? Hash
     if block_given?
-      while i < length
-        yield(self[i])
-        i += 1
+      case test
+      when true
+        while i < keys.length
+          yield(keys[i], values[i])
+          i += 1
+        end
+      else
+        while i < length
+          yield(self[i])
+          i += 1
+        end
       end
     else
-      Enumerator.new(self, :my_each)
+      to_enum
     end
   end
 
@@ -22,7 +31,7 @@ module Enumerable
         i += 1
       end
     else
-      Enumerator.new(self, :my_each_with_index)
+      to_enum
     end
   end
 
@@ -33,8 +42,7 @@ module Enumerable
         array.push(self[i]) if yield(x)
       end
     else
-      new_e = Enumerator.new(self, :my_select)
-      return new_e
+      to_enum
     end
     array
   end
@@ -123,7 +131,7 @@ module Enumerable
       end
       self
     else
-      Enumerable.new(self, :my_map)
+      to_enum
     end
   end
 
