@@ -4,23 +4,15 @@ module Enumerable
   UNDEFINED = Object.new
   def my_each
     i = 0
-    test = is_a? Hash
     if block_given?
-      case test
-      when true
-        while i < keys.length
-          yield(keys[i], values[i])
-          i += 1
-        end
-      else
-        while i < length
-          yield(self[i])
-          i += 1
-        end
+      while i < length
+        yield(self[i])
+        i += 1
       end
     else
-      to_enum
+      return to_enum :my_each unless block_given?
     end
+    self
   end
 
   def my_each_with_index
@@ -31,7 +23,7 @@ module Enumerable
         i += 1
       end
     else
-      to_enum
+      to_enum :my_each_with_index
     end
   end
 
@@ -42,7 +34,7 @@ module Enumerable
         array.push(self[i]) if yield(x)
       end
     else
-      to_enum
+      return to_enum :my_select unless block_given?
     end
     array
   end
@@ -54,7 +46,7 @@ module Enumerable
       my_each do |x|
         return false unless yield(x)
       end
-    elsif condition
+    elsif condition != UNDEFINED
       my_each do |x|
         return false unless x == condition
       end
@@ -73,7 +65,7 @@ module Enumerable
       my_each do |x|
         return true if yield(x)
       end
-    elsif condition
+    elsif condition != UNDEFINED
       my_each do |x|
         return true if x == condition
       end
@@ -92,7 +84,7 @@ module Enumerable
       my_each do |x|
         return false if yield(x)
       end
-    elsif condition
+    elsif condition != UNDEFINED
       my_each do |x|
         return false if x == condition
       end
@@ -131,7 +123,7 @@ module Enumerable
       end
       self
     else
-      to_enum
+      to_enum :my_map
     end
   end
 
