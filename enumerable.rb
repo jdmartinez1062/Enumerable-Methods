@@ -10,8 +10,9 @@ module Enumerable
         i += 1
       end
     else
-      Enumerator.new(self, :my_each)
+      return to_enum :my_each unless block_given?
     end
+    self
   end
 
   def my_each_with_index
@@ -22,7 +23,7 @@ module Enumerable
         i += 1
       end
     else
-      Enumerator.new(self, :my_each_with_index)
+      to_enum :my_each_with_index
     end
   end
 
@@ -33,8 +34,7 @@ module Enumerable
         array.push(self[i]) if yield(x)
       end
     else
-      new_e = Enumerator.new(self, :my_select)
-      return new_e
+      return to_enum :my_select unless block_given?
     end
     array
   end
@@ -46,7 +46,7 @@ module Enumerable
       my_each do |x|
         return false unless yield(x)
       end
-    elsif condition
+    elsif condition != UNDEFINED
       my_each do |x|
         return false unless x == condition
       end
@@ -65,7 +65,7 @@ module Enumerable
       my_each do |x|
         return true if yield(x)
       end
-    elsif condition
+    elsif condition != UNDEFINED
       my_each do |x|
         return true if x == condition
       end
@@ -84,7 +84,7 @@ module Enumerable
       my_each do |x|
         return false if yield(x)
       end
-    elsif condition
+    elsif condition != UNDEFINED
       my_each do |x|
         return false if x == condition
       end
@@ -123,7 +123,7 @@ module Enumerable
       end
       self
     else
-      Enumerable.new(self, :my_map)
+      to_enum :my_map
     end
   end
 
